@@ -1,8 +1,35 @@
+### https://raw.github.com/github/gitignore/ae5dd85759b8a94e5f3276383295f3b655aaa975/CommonLisp.gitignore
+
+*.FASL
 *.fasl
-*.dx32fsl
-*.dx64fsl
-*.lx32fsl
-*.lx64fsl
-*.x86f
-*~
-.#*
+*.lisp-temp
+
+
+### https://raw.github.com/github/gitignore/ae5dd85759b8a94e5f3276383295f3b655aaa975/Global/OSX.gitignore
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
