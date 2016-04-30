@@ -19,8 +19,13 @@
   :depends-on ()
   :components ((:module "src"
                 :components
-                        ((:file "othello")
-                         (:file "tag"))))
+                        (
+                         (:file "util")
+                         (:file "server")
+                         (:file "tag")
+                         (:file "engine")
+                         (:file "othello")
+                         )))
   :description ""
   :long-description
   #.(with-open-file (stream (merge-pathnames
