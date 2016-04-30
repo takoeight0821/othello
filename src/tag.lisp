@@ -1,26 +1,9 @@
 (in-package :cl-user)
 (defpackage :othello.tag
-  (:use :cl)
+  (:use :cl :othello.util)
   (:export :tag :html :body :svg :brightness))
 (in-package :othello.tag)
 
-(defmacro split (val yes no)
-  (let ((g (gensym)))
-    `(let ((,g ,val))
-       (if ,g
-           (let ((head (car ,g))
-                 (tail (cdr ,g)))
-             ,yes)
-           ,no))))
-
-(defun pairs (list)
-  (labels ((f (list acc)
-             (split list
-                    (if tail
-                        (f (cdr tail) (cons (cons head (car tail)) acc))
-                        (reverse acc))
-                    (reverse acc))))
-    (f list nil)))
 
 (defun print-tag (name alist closingp)
   (princ #\<)
@@ -36,7 +19,7 @@
   `(progn (print-tag ',name
                      (list ,@(mapcar (lambda (x)
                                        `(cons ',(car x) ,(cdr x)))
-                                     (pairs atts)))
+                                     (othello.util::pairs atts)))
                      nil)
           ,@body
           (print-tag ',name nil t)))
@@ -67,10 +50,7 @@
 
 
 (defun circle (center radius color)
-  (tag circle (cx (car center)
-               cy (cdr center)
-               r radius
-               style (svg-style color))))
+  (tag circle (cx (car center) cy (cdr center) r radius style (svg-style color))))
 
 (defun polygon (points color)
   (tag polygon (points (format nil
