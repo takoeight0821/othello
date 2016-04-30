@@ -153,7 +153,7 @@
 
 (defun random-strategy (player board)
   "Make any legal move."
-  (random-elt (legal-moves player board)))
+  (othello.util:random-elt (legal-moves player board)))
 
 (defun legal-moves (player board)
   "Returns a list of legal moves for player"

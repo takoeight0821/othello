@@ -19,7 +19,7 @@
   `(progn (print-tag ',name
                      (list ,@(mapcar (lambda (x)
                                        `(cons ',(car x) ,(cdr x)))
-                                     (othello.util::pairs atts)))
+                                     (othello.util:pairs atts)))
                      nil)
           ,@body
           (print-tag ',name nil t)))
