@@ -1,33 +1,45 @@
 (in-package :cl-user)
 (defpackage othello.engine
-  (:use :cl :othello.util))
+  (:use :cl :cl-annot :othello.util))
 (in-package :othello.engine)
+(annot:enable-annot-syntax)
 
 (defparameter *all-directions* '(-11 -10 -9 -1 1 9 10 11))
 
+@export
 (defconstant empty 0 "An empty square")
+@export
 (defconstant black 1 "A black piece")
+@export
 (defconstant white 2 "A white piece")
+@export
 (defconstant outer 3 "Marks squares outside the 8x8 board")
 
+@export
 (deftype piece () `(integer ,empty ,outer))
 
 (defun char-of (piece) (char ".@0?" piece))
 
+@export
 (defun opponent (player) (if (eql player black) white black))
 
+@export
 (deftype board () '(simple-array piece (100)))
 
+@export
 (defun bref (board square) (aref board square))
+@export
 (defsetf bref (board square) (val)
   `(setf (aref ,board ,square) ,val))
 
+@export
 (defun copy-board (board)
   (copy-seq board))
 
 (defparameter *all-squares*
   (loop for i from 11 to 88 when (<= 1 (mod i 10) 8) collect i))
 
+@export
 (defun initial-board ()
   "Return a board, empty except for four pieces in the middle."
   ;; ボードは100要素のベクターから、要素11-88が使用される
@@ -46,6 +58,7 @@
   (- (count player board)
      (count (opponent player) board)))
 
+@export
 (defun print-board (board)
   "Print a board, along with some statistics."
   (format t "~2&     1 2 3 4 5 6 7 8  [~c=~2a ~c=~2a (~@d)]"
@@ -100,6 +113,7 @@
          (find-bracketing-piece (+ square dir) player board dir))
         (t nil)))
 
+@export
 (defun othello (bl-strategy wh-strategy &optional (print t))
   "Play a game of othello. Return the score, where a positive difference means black, the first player, wins."
   (setq *random-state* (make-random-state))
@@ -116,6 +130,7 @@
       (print-board board))
     (count-difference black board)))
 
+@export
 (defun next-to-play (board previous-player print)
   "Compute the player to move next, or NIL if nobody can move."
   (let ((opp (opponent previous-player)))
@@ -132,6 +147,7 @@
   (some (lambda (move) (legal-p move player board))
         *all-squares*))
 
+@export
 (defun get-move (strategy player board print)
   "Call the player's strategy function to get a move.
   Keep calling until a legal move is made."
@@ -145,12 +161,14 @@
       (t (warn "Illegal move: ~d" move)
          (get-move strategy player board print)))))
 
+@export
 (defun human (player board)
   "A human player for the game of Othello"
   (declare (ignore board))
   (format t "~&~c to move: " (char-of player))
   (read))
 
+@export
 (defun random-strategy (player board)
   "Make any legal move."
   (othello.util:random-elt (legal-moves player board)))
@@ -160,9 +178,24 @@
   (loop for move in *all-squares*
         when (legal-p move player board) collect move))
 
-;; (defun maximize-difference (player board)
-;;   "A strategy that maximizes the difference in pieses."
-;;   (funcall (maximizer #'count-difference) player board))
+@export
+(defun maximize-difference (player board)
+  "A strategy that maximizes the difference in pieses."
+  (funcall (maximizer #'count-difference) player board))
 
-;; (defun maximizer (eval-fn)
-;;   "Return a strategy that will consider every legal move,")
+(defun maximizer (eval-fn)
+  "Return a strategy that will consider every legal move,
+   apply EVAL-FN to each resulting board, and choose
+   the move for which EVAL-FN returns the best score.
+   FN takes two arguments: the player-to-move and board"
+  (lambda (player board)
+    (let* ((moves (legal-moves player board))
+           (scores (mapcar (lambda (move)
+                             (funcall
+                              eval-fn
+                              player
+                              (make-move move player
+                                         (copy-board board))))
+                           moves))
+           (best (apply #'max scores)))
+      (elt moves (position best scores)))))
