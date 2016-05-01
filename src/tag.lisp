@@ -67,6 +67,11 @@
                                        points))
                 style (svg-style color))))
 
+(defun rect (pos size color)
+  (tag rect (x (car pos) y (cdr pos)
+               width (car size) height (cdr size)
+               style (svg-style color))))
+
 (defparameter *rgb*
   ;; https://ja.wikipedia.org/wiki/ウェブカラー 参照
   '((white 255 255 255) (silver 192 192 192) (gray 128 128 128) (black 0 0 0)
@@ -76,3 +81,11 @@
 
 (defun get-color (name)
   (cdr (assoc name *rgb*)))
+
+(defun draw-piece-svg (pos type)
+  (let ((color (case type
+                 (0 (get-color 'green))
+                 (1 (get-color 'black))
+                 (2 (get-color 'white))
+                 (3 (get-color 'gray)))))
+    (rect pos '(30 . 30) color)))
