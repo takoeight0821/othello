@@ -160,9 +160,9 @@
   (loop for move in *all-squares*
         when (legal-p move player board) collect move))
 
-(defun maximize-difference (player board)
-  "A strategy that maximizes the difference in pieses."
-  (funcall (maximizer #'count-difference) player board))
+;; (defun maximize-difference (player board)
+;;   "A strategy that maximizes the difference in pieses."
+;;   (funcall (maximizer #'count-difference) player board))
 
-(defun maximizer (eval-fn)
-  "Return a strategy that will consider every legal move,")
+;; (defun maximizer (eval-fn)
+;;   "Return a strategy that will consider every legal move,")

@@ -21,9 +21,9 @@
                 :components
                         (
                          (:file "util")
-                         (:file "server")
-                         (:file "tag")
                          (:file "engine")
+                         (:file "tag")
+                         (:file "server")
                          (:file "othello")
                          )))
   :description ""

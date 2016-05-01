@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage othello.server
-  (:use :cl :cl-annot :clack :ningle))
+  (:use :cl :cl-annot :clack :ningle :othello.engine))
 (in-package :othello.server)
 (annot:enable-annot-syntax)
 
@@ -8,10 +8,19 @@
 
 (defvar *app* (make-instance 'ningle:<app>))
 
-(setf (ningle:route *app* "/")
-      "Welcome to ningle!")
+(defparameter *board* (othello.engine::initial-board))
+(setq *random-state* (make-random-state))
 
-(setf (ningle:route *app* "/put/:pos")
+(defun htmlize-board (board)
+  (with-output-to-string (*standard-output*)
+    (with-input-from-string (in (with-output-to-string (*standard-output*)
+                                  (othello.engine::print-board board)))
+      (loop for line = (read-line in nil nil)
+            while line
+            do (progn (princ line)
+                      (princ "<br>"))))))
+
+(setf (ningle:route *app* "/" :accept '("text/html" "text/xml"))
       (lambda (params)
-        (format nil "~a" (cdr (assoc :pos params :test #'string=)))))
-(clack:clackup *app*)
+        (declare (ignore params))
+        (htmlize-board *board*)))
