@@ -199,3 +199,25 @@
                            moves))
            (best (apply #'max scores)))
       (elt moves (position best scores)))))
+
+(defparameter *weights*
+  '#(0   0   0  0  0  0  0   0   0 0
+     0 120 -20 20  5  5 20 -20 120 0
+     0 -20 -40 -5 -5 -5 -5 -40 -20 0
+     0  20  -5 15  3  3 15  -5  20 0
+     0   5  -5  3  3  3  3  -5   5 0
+     0   5  -5  3  3  3  3  -5   5 0
+     0  20  -5 15  3  3 15  -5  20 0
+     0 -20 -40 -5 -5 -5 -5 -40 -20 0
+     0 120 -20 20  5  5 20 -20 120 0
+     0   0   0  0  0  0  0   0   0 0))
+
+(defun weighted-squares (player board)
+  "Sum of the weights of player's squares minus opponent's."
+  (let ((opp (opponent player)))
+    (loop for i in *all-squares*
+          when (eql (bref board i) player)
+            sum (aref *weights* i)
+          when (eql (bref board i) opp)
+            sum (- (aref *weights* i)))))
+
