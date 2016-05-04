@@ -14,6 +14,8 @@
 (defparameter *board* (othello.engine::initial-board))
 (setq *random-state* (make-random-state))
 
+(defparameter *current-player* othello.engine:black)
+
 (defun htmlize-board (board)
   (with-output-to-string (*standard-output*)
     (with-input-from-string (in (with-output-to-string (*standard-output*)
@@ -27,4 +29,6 @@
       (lambda (params)
         (declare (ignore params))
         (with-output-to-string (*standard-output*)
-          (svg (* 50 10) (* 50 10) (draw-board-svg *board*)))))
+          (svg (* 50 10) (* 50 10) (draw-board-svg *board* *current-player*)))
+        ;; (setq *current-player* (othello.engine:opponent *current-player*))
+        ))

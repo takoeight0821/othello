@@ -81,7 +81,13 @@
   "A Legal move must be into an empty square, and it must flip at least one opponent piece."
   (and (eql (bref board move) empty)
        (some (lambda (dir) (would-flip? move player board dir))
-             *all-directions*)))
+             *all-directions*)
+       move))
+
+@export
+(defun legal-moves (player board)
+  "return Legal moves"
+  (remove-if #'null (mapcar (lambda (move) player board) *all-squares*)))
 
 (defun make-move (move player board)
   "Update board to reflect move by player."
