@@ -84,11 +84,6 @@
              *all-directions*)
        move))
 
-@export
-(defun legal-moves (player board)
-  "return Legal moves"
-  (remove-if #'null (mapcar (lambda (move) player board) *all-squares*)))
-
 (defun make-move (move player board)
   "Update board to reflect move by player."
   ;; 最初に手を作成して次に反転を行う
@@ -138,8 +133,8 @@
     (count-difference black board)))
 
 @export
-(defun othello-a-step (board cur-pl strategy &optional (print t))
-  (if (next-to-play board (opponent cur-pl))
+(defun othello-a-step (board cur-pl strategy &optional (print nil))
+  (if (next-to-play board (opponent cur-pl) print)
       (get-move strategy cur-pl board print)))
 
 @export
@@ -187,8 +182,10 @@
 
 (defun legal-moves (player board)
   "Returns a list of legal moves for player"
-  (loop for move in *all-squares*
-        when (legal-p move player board) collect move))
+  (if player
+      (loop for move in *all-squares*
+            when (legal-p move player board) collect move)
+      nil))
 
 @export
 (defun maximize-difference (player board)
