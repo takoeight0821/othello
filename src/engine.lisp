@@ -36,6 +36,7 @@
 (defun copy-board (board)
   (copy-seq board))
 
+@export
 (defparameter *all-squares*
   (loop for i from 11 to 88 when (<= 1 (mod i 10) 8) collect i))
 
