@@ -1,6 +1,9 @@
 (in-package :cl-user)
 (defpackage othello.server
-  (:use :cl :cl-annot :clack :ningle :othello.engine))
+  (:use :cl :cl-annot :clack :ningle :othello.engine :othello.svg)
+  (:import-from :othello.svg
+   :svg
+   :draw-board-svg))
 (in-package :othello.server)
 (annot:enable-annot-syntax)
 
@@ -23,4 +26,5 @@
 (setf (ningle:route *app* "/" :accept '("text/html" "text/xml"))
       (lambda (params)
         (declare (ignore params))
-        (htmlize-board *board*)))
+        (with-output-to-string (*standard-output*)
+          (svg (* 50 10) (* 50 10) (draw-board-svg *board*)))))
