@@ -93,7 +93,7 @@
 @export
 (defun draw-piece-svg (pos size type &optional (highlight nil))
   (cond ((= type 0) (if highlight
-                        (tag a ("xlink:href" (make-game-link (car highlight)))
+                        (tag a ("xlink:href" (make-game-link (car highlight))) ;highlight = (member pos (legal-moves player board))の戻り値
                              (rect pos size (get-color 'green 80)))
                         (rect pos size (get-color 'green 50))))
         ((= type 1)
@@ -107,8 +107,7 @@
          (circle (cons (+ (car pos) (ash (car size) -1))
                        (+ (cdr pos) (ash (cdr size) -1)))
                  (- (ash (car size) -1) 2)
-                 (get-color 'white)))
-        ((= type 3) (rect pos size (get-color 'gray)))))
+                 (get-color 'white)))))
 
 @export
 (defun draw-board-svg (board cur-pl)

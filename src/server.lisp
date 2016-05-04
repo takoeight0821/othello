@@ -27,8 +27,8 @@
 
 (setf (ningle:route *app* "/" :accept '("text/html" "text/xml"))
       (lambda (params)
-        (declare (ignore params))
         (with-output-to-string (*standard-output*)
-          (svg (* 50 10) (* 50 10) (draw-board-svg *board* *current-player*)))
-        ;; (setq *current-player* (othello.engine:opponent *current-player*))
+          (if (assoc "chosen" params :test #'string=)
+              (let ((pos (cdr (assoc "chosen" params :test #'string=)))))
+              (svg (* 50 10) (* 50 10) (draw-board-svg *board* *current-player*))))
         ))
