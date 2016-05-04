@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage :othello.svg
-  (:use :cl :cl-annot))
+  (:use :cl :cl-annot :othello.engine))
 (in-package :othello.svg)
 
 (annot:enable-annot-syntax)
@@ -25,7 +25,8 @@
   `(progn (print-tag ',name
                      (list ,@(mapcar (lambda (x)
                                        `(cons ',(car x) ,(cdr x)))
-                                     (plist-alist atts)))
+                                     (loop for (k v) on atts by #'cddr
+                                           collect (cons (string-downcase k) v))))
                      nil)
           ,@body
           (print-tag ',name nil t)))
@@ -105,3 +106,16 @@
                  (- (ash (car size) -1) 2)
                  (get-color 'white)))
         ((= type 3) (rect pos size (get-color 'gray)))))
+
+@export
+(defun draw-board-svg (board)
+  (loop for pos in othello.engine:*all-squares*
+        for x = (* 50 (mod pos 10))
+        for y = (* 50 (truncate pos 10))
+        do (tag g ()
+             (tag a ("xlink:href" (make-game-link pos))
+               (draw-piece-svg (cons x y) '(50 . 50)
+                               (othello.engine:bref board pos))))))
+
+(defun make-game-link (pos)
+  (format nil "/?chosen=~a" pos))
