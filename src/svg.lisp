@@ -92,7 +92,10 @@
 
 @export
 (defun draw-piece-svg (pos size type &optional (highlight nil))
-  (cond ((= type 0) (rect pos size (get-color 'green (if highlight 80 50))))
+  (cond ((= type 0) (if highlight
+                        (tag a ("xlink:href" (make-game-link (car highlight)))
+                             (rect pos size (get-color 'green 80)))
+                        (rect pos size (get-color 'green 50))))
         ((= type 1)
          (rect pos size (get-color 'green 50))
          (circle (cons (+ (car pos) (ash (car size) -1))
@@ -113,9 +116,8 @@
         for x = (* 50 (mod pos 10))
         for y = (* 50 (truncate pos 10))
         do (tag g ()
-             (tag a ("xlink:href" (make-game-link pos))
-               (draw-piece-svg (cons x y) '(50 . 50)
-                               (othello.engine:bref board pos) (member pos (othello.engine:legal-moves cur-pl board)))))))
+                (draw-piece-svg (cons x y) '(50 . 50)
+                                (othello.engine:bref board pos) (member pos (othello.engine:legal-moves cur-pl board))))))
 
 (defun make-game-link (pos)
   (format nil "/?chosen=~a" pos))
