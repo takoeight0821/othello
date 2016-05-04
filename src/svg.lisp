@@ -1,7 +1,7 @@
 (in-package :cl-user)
-(defpackage :othello.tag
+(defpackage :othello.svg
   (:use :cl :othello.util :cl-annot))
-(in-package :othello.tag)
+(in-package :othello.svg)
 
 (annot:enable-annot-syntax)
 
@@ -67,6 +67,7 @@
                                        points))
                 style (svg-style color))))
 
+@export
 (defun rect (pos size color)
   (tag rect (x (car pos) y (cdr pos)
                width (car size) height (cdr size)
@@ -79,13 +80,23 @@
     (lime 0 255 0) (green 0 50 0) (aqua 0 255 255) (teal 0 128 128)
     (blue 0 0 255) (navy 0 0 128) (fuchsia 255 0 255) (purple 128 0 128)))
 
-(defun get-color (name)
-  (cdr (assoc name *rgb*)))
+@export
+(defun get-color (name &optional (amt 0))
+  (brightness (cdr (assoc name *rgb*)) amt))
 
-(defun draw-piece-svg (pos type)
-  (let ((color (case type
-                 (0 (get-color 'green))
-                 (1 (get-color 'black))
-                 (2 (get-color 'white))
-                 (3 (get-color 'gray)))))
-    (rect pos '(30 . 30) color)))
+@export
+(defun draw-piece-svg (pos size type)
+  (cond ((= type 0) (rect pos size (get-color 'green 50)))
+        ((= type 1)
+         (rect pos size (get-color 'green 50))
+         (circle (cons (+ (car pos) (ash (car size) -1))
+                       (+ (cdr pos) (ash (cdr size) -1)))
+                 (- (ash (car size) -1) 2)
+                 (get-color 'black)))
+        ((= type 2)
+         (rect pos size (get-color 'green 50))
+         (circle (cons (+ (car pos) (ash (car size) -1))
+                       (+ (cdr pos) (ash (cdr size) -1)))
+                 (- (ash (car size) -1) 2)
+                 (get-color 'white)))
+        ((= type 3) (rect pos size (get-color 'gray)))))
