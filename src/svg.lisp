@@ -1,6 +1,6 @@
 (in-package :cl-user)
 (defpackage :othello.svg
-  (:use :cl :othello.util :cl-annot))
+  (:use :cl :cl-annot))
 (in-package :othello.svg)
 
 (annot:enable-annot-syntax)
@@ -15,12 +15,17 @@
         alist)
   (princ #\>))
 
+;; from https://github.com/fukamachi/assoc-utils
+(defun plist-alist (plist)
+  (loop for (k v) on plist by #'cddr
+                collect (cons (string-downcase k) v)))
+
 @export
 (defmacro tag (name atts &body body)
   `(progn (print-tag ',name
                      (list ,@(mapcar (lambda (x)
                                        `(cons ',(car x) ,(cdr x)))
-                                     (othello.util:pairs atts)))
+                                     (plist-alist atts)))
                      nil)
           ,@body
           (print-tag ',name nil t)))
