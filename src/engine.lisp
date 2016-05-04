@@ -138,8 +138,8 @@
     (count-difference black board)))
 
 @export
-(defun othello-a-step (board cur-pl strategy &optional (print nil))
-  (if (next-to-play board (opponent cur-pl) nil)
+(defun othello-a-step (board cur-pl strategy &optional (print t))
+  (if (next-to-play board (opponent cur-pl))
       (get-move strategy cur-pl board print)))
 
 @export

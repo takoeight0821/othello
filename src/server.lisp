@@ -2,8 +2,9 @@
 (defpackage othello.server
   (:use :cl :cl-annot :clack :ningle :othello.engine :othello.svg)
   (:import-from :othello.svg
-   :svg
-   :draw-board-svg))
+   :svg :draw-board-svg)
+  (:import-from :othello.engine
+   :othello-a-step))
 (in-package :othello.server)
 (annot:enable-annot-syntax)
 
@@ -29,6 +30,9 @@
       (lambda (params)
         (with-output-to-string (*standard-output*)
           (if (assoc "chosen" params :test #'string=)
-              (let ((pos (cdr (assoc "chosen" params :test #'string=)))))
-              (svg (* 50 10) (* 50 10) (draw-board-svg *board* *current-player*))))
-        ))
+              (let ((pos (read-from-string (cdr (assoc "chosen" params :test #'string=)))))
+                (othello-a-step *board* *current-player* (lambda (player board) pos))
+                (setq *current-player* (othello.engine:opponent *current-player*))
+                (svg (* 50 10) (* 50 10) (draw-board-svg *board* *current-player*)))
+              (svg (* 50 10) (* 50 10) (draw-board-svg *board* *current-player*))))))
+
