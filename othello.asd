@@ -22,7 +22,7 @@
                         (
                          (:file "util")
                          (:file "engine")
-                         (:file "tag")
+                         (:file "svg")
                          (:file "server")
                          (:file "othello")
                          )))
