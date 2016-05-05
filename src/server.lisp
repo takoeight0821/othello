@@ -17,15 +17,6 @@
 
 (defparameter *current-player* othello.engine:black)
 
-(defun htmlize-board (board)
-  (with-output-to-string (*standard-output*)
-    (with-input-from-string (in (with-output-to-string (*standard-output*)
-                                  (othello.engine::print-board board)))
-      (loop for line = (read-line in nil nil)
-            while line
-            do (progn (princ line)
-                      (princ "<br>"))))))
-
 (setf (ningle:route *app* "/" :accept '("text/html" "text/xml"))
       (lambda (params)
         (with-output-to-string (*standard-output*)
