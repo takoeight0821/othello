@@ -180,6 +180,7 @@
   "Make any legal move."
   (othello.util:random-elt (legal-moves player board)))
 
+@export
 (defun legal-moves (player board)
   "Returns a list of legal moves for player"
   (if player
