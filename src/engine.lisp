@@ -96,8 +96,9 @@
   "Make any flips in the given direction."
   (let ((bracketer (would-flip? move player board dir)))
     (when bracketer
-      (loop for c from (+ move dir) by dir until (eql c bracketer)
-            do (setf (bref board c) player)))))
+      (do ((c (+ move dir) (+ c dir)))
+          ((eql c bracketer) t)
+        (setf (bref board c) player)))))
 
 (defun would-flip? (move player board dir)
   "Would this move result in any flips in this direction?

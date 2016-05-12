@@ -6,7 +6,7 @@
 (defparameter *server* nil)
 
 (defun start ()
-  (setq *server* (clack:clackup othello.server::*app*)))
+  (setf *server* (clack:clackup othello.server::*app*)))
 
 (defun stop ()
   (clack:stop *server*))
