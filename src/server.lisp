@@ -19,7 +19,7 @@
 
 (defun draw-othello (pos)
   (with-output-to-string (*standard-output*)
-    (if pos
+    (when pos
         (othello-a-step *board* (current-player) (lambda (player board) pos))
         (switch-player))
 
