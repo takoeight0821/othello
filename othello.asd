@@ -16,7 +16,7 @@
   :version "0.1"
   :author "Kono Yuya"
   :license "MIT license"
-  :depends-on (:cl-annot :clack)
+  :depends-on (:cl-annot :hunchentoot :clack)
   :components ((:module "src"
                 :components
                         (
