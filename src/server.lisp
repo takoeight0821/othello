@@ -1,12 +1,11 @@
 (in-package :cl-user)
 (defpackage othello.server
-  (:use :cl :cl-annot :clack :othello.util :othello.engine :othello.svg)
+  (:use :cl :clack :othello.util :othello.engine :othello.svg)
   (:import-from :othello.svg
    :svg :draw-board-svg)
   (:import-from :othello.engine
    :othello-a-step))
 (in-package :othello.server)
-(annot:enable-annot-syntax)
 
 ;; The othello game server
 
@@ -46,11 +45,4 @@
     
     `(200 (:content-type "text/html")
           (,(draw-othello pos)))))
-
-;; (setf (ningle:route *app* "/")
-;;       (lambda (params)
-;;         `(200 (:content-type "text/html")
-;;               (,
-;;                (draw-othello (assoc "chosen" params :test #'string=))
-;;                ))))
 
