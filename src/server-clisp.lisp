@@ -1,7 +1,4 @@
-(in-package :cl-user)
-(defpackage othello.server
-  (:use :cl :othello.svg :othello.engine :socket))
-(in-package :othello.server)
+(in-package :othello)
 
 ;; The original code from Land of Lisp
 
@@ -73,12 +70,12 @@
                    (funcall request-handler path header params))))
       (socket:socket-server-close socket))))
 
-(defparameter *board* (othello.engine::initial-board))
+(defparameter *board* (initial-board))
 (setq *random-state* (make-random-state))
 
-(let ((p othello.engine:black))
+(let ((p black))
   (defun current-player () p)
-  (defun switch-player () (setq p (othello.engine:next-to-play *board* p nil))))
+  (defun switch-player () (setq p (next-to-play *board* p nil))))
 
 (defun draw-othello (pos)
   (with-output-to-string (*standard-output*)

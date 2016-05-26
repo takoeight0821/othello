@@ -1,20 +1,13 @@
-(in-package :cl-user)
-(defpackage othello.server
-  (:use :cl :clack :othello.util :othello.engine :othello.svg)
-  (:import-from :othello.svg
-   :svg :draw-board-svg)
-  (:import-from :othello.engine
-   :othello-a-step))
-(in-package :othello.server)
+(in-package :othello)
 
 ;; The othello game server
 
-(defparameter *board* (othello.engine::initial-board))
+(defparameter *board* (initial-board))
 (setq *random-state* (make-random-state))
 
-(let ((p othello.engine:black))
+(let ((p black))
   (defun current-player () p)
-  (defun switch-player () (setq p (othello.engine:next-to-play *board* p nil))))
+  (defun switch-player () (setq p (next-to-play *board* p nil))))
 
 (defun draw-othello (pos)
   (with-output-to-string (*standard-output*)
@@ -41,7 +34,7 @@
       nil))
 
 (defun othello-handler (env)
-  (let ((pos (parse (cdr (assoc :query-string (othello.util:pairs env))))))
+  (let ((pos (parse (cdr (assoc :query-string (pairs env))))))
     
     `(200 (:content-type "text/html")
           (,(draw-othello pos)))))

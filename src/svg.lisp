@@ -1,12 +1,4 @@
-(in-package :cl-user)
-(defpackage :othello.svg
-  (:use :cl :othello.engine)
-  (:export
-   :tag :html :body :svg
-   :brightness :svg-style
-   :circle :polygon :rect
-   :get-color :draw-board-svg))
-(in-package :othello.svg)
+(in-package :othello)
 
 (defun print-tag (name alist closingp)
   (princ #\<)
@@ -102,12 +94,12 @@
                  (get-color 'white)))))
 
 (defun draw-board-svg (board cur-pl)
-  (loop for pos in othello.engine:*all-squares*
+  (loop for pos in *all-squares*
         for x = (* 50 (mod pos 10))
         for y = (* 50 (truncate pos 10))
         do (tag g ()
                 (draw-piece-svg (cons x y) '(50 . 50)
-                                (othello.engine:bref board pos) (member pos (othello.engine:legal-moves cur-pl board))))))
+                                (bref board pos) (member pos (legal-moves cur-pl board))))))
 
 (defun make-game-link (pos)
   (format nil "/?chosen=~a" pos))

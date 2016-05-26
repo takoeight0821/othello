@@ -21,6 +21,7 @@
   :components ((:module "src"
                 :components
                         (
+                         (:file "package")
                          (:file "util")
                          (:file "engine")
                          (:file "svg")

@@ -1,11 +1,4 @@
-(in-package :cl-user)
-(defpackage othello.util
-  (:use :cl)
-  (:export
-   :random-elt
-   :split
-   :pairs))
-(in-package :othello.util)
+(in-package :othello)
 
 ;; The original codes from "実用Common Lisp" and "Land of Lisp"
 

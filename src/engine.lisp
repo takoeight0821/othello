@@ -1,16 +1,4 @@
-(in-package :cl-user)
-(defpackage othello.engine
-  (:use :cl :othello.util)
-  (:export
-   :empty :black :white :outer :piece
-   :opponent
-   :board :bref :copy-board :*all-squares* :initial-board :print-board
-   :othello :othello-a-step :next-to-play
-   :get-move :legal-moves
-   :maximize-difference
-   :human :random-strategy
-   ))
-(in-package :othello.engine)
+(in-package :othello)
 
 (defparameter *all-directions* '(-11 -10 -9 -1 1 9 10 11))
 
@@ -168,7 +156,7 @@
 
 (defun random-strategy (player board)
   "Make any legal move."
-  (othello.util:random-elt (legal-moves player board)))
+  (random-elt (legal-moves player board)))
 
 (defun legal-moves (player board)
   "Returns a list of legal moves for player"
