@@ -93,13 +93,19 @@
                  (- (ash (car size) -1) 2)
                  (get-color 'white)))))
 
-(defun draw-board-svg (board cur-pl)
+(defun draw-board-svg (board cur-pl &optional (humanp nil))
   (loop for pos in *all-squares*
         for x = (* 50 (mod pos 10))
         for y = (* 50 (truncate pos 10))
         do (tag g ()
                 (draw-piece-svg (cons x y) '(50 . 50)
-                                (bref board pos) (member pos (legal-moves cur-pl board))))))
+                                (bref board pos)
+                                (if humanp
+                                    (member pos (legal-moves cur-pl board)))
+                                )))
+  (if (not humanp)
+      (tag script ()
+        (princ "window.setTimeout('window.location=\"/\"', 1000)"))))
 
 (defun make-game-link (pos)
   (format nil "/?chosen=~a" pos))
