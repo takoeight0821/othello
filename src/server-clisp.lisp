@@ -94,7 +94,7 @@
           (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) (not pos)))
           (terpri))
         (progn
-          (othello-a-step *board* (current-player) #'random-strategy)
+          (othello-a-step *board* (current-player) (maximizer #'weighted-squares))
           (switch-player)
           (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) t))
           (terpri)))
