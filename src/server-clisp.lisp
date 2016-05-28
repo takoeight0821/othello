@@ -33,7 +33,9 @@
           (t s))))
 
 (defun parse-url (s)
-  (if (> 3 (length s))
+  ;; たまに(subseq url 2 0)を呼んで落ちることがあるのを回避するため、回避策としてifを噛ませている。
+  ;; HTTPリクエストのログを取る必要がある。 
+  (if (> 3 (length s))                        
       nil
       (let* ((url (subseq s
                           (+ 2 (position #\space s))
@@ -82,6 +84,7 @@
 
 (defun draw-othello (pos)
   (with-output-to-string (*standard-output*)
+    ;; It's dirty code!
     (if (eq (current-player) *human-player*)
         (progn
           (when pos
@@ -105,21 +108,20 @@
                     "Black win!"
                     (if (= (count 1 *board*) (count 2 *board*))
                         "Draw..."
-                        "White win!"))))
-    ))
+                        "White win!"))))))
 
 (defun parse (param)
   (if param
       (read-from-string (subseq param 7))
       nil))
 
+;; たぶん削除して良いはず。serve関数のデバックに使うか?
 (defun hello-request-handler (path header params)
   (if (equal path "greeting")
       (if params
           (format t "<html><body>Nice to meet you, ~a!</body></html>" (cdar params))
           (princ "<html><form>What is your name?<input name='name' /></form></html>"))
       (princ "Sorry... I don't know that page.")))
-
 
 (defun othello-handler (path header params)
   (declare (ignore path header))
