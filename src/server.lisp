@@ -5,18 +5,28 @@
 (defparameter *board* (initial-board))
 (setq *random-state* (make-random-state))
 
+(defparameter *human-player* black)
 (let ((p black))
   (defun current-player () p)
   (defun switch-player () (setq p (next-to-play *board* p nil))))
 
 (defun draw-othello (pos)
   (with-output-to-string (*standard-output*)
-    (when pos
-        (othello-a-step *board* (current-player) (lambda (player board) pos))
-        (switch-player))
+    ;; It's dirty code!
+    (if (eq (current-player) *human-player*)
+        (progn
+          (when pos
+            (othello-a-step *board* (current-player) (lambda (player board) pos))
+            (switch-player))
 
-    (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player)))
-    (terpri)
+          (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) (not pos)))
+          (terpri))
+        (progn
+          (othello-a-step *board* (current-player) (maximizer #'weighted-squares))
+          (switch-player)
+          (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) t))
+          (terpri)))
+
     (princ (if (equal 1 (current-player)) "Black" "White"))
 
     (when (null (current-player))
@@ -27,7 +37,6 @@
                     (if (= (count 1 *board*) (count 2 *board*))
                         "Draw..."
                         "White win!"))))))
-
 (defun parse (param)
   (if param
       (read-from-string (subseq param 7))
