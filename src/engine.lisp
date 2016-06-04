@@ -246,4 +246,27 @@
       (declare (ignore value))
       move)))
 
+(defun modified-weight-squares (player board)
+  "Like WEIGHTED-SQUARES, but don't take off for moving
+   near an occupied corner."
+  (let ((w (weighted-squares player board)))
+    (dolist (corner '(11 18 81 88))
+      (when (not (eql (bref board corner) empty))
+        (dolist (c (neighbors corner))
+          (when (not (eql (bref board c) empty))
+            (incf w (* (- 5 (aref *weights* c))
+                       (if (eql (bref board c) player)
+                           +1 -1)))))))
+    w))
+
+(let ((neighbor-table (make-array 100 :initial-element nil)))
+  ;; neighbor tableの初期化
+  (dolist (square *all-squares*)
+    (dolist (dir *all-directions*)
+      (if (valid-p (+ square dir))
+          (push (+ square dir)
+                (aref neighbor-table square)))))
+  (defun neighbors (square)
+    "Return a list of all squares adjacent to a square."
+    (aref neighbor-table square)))
 
