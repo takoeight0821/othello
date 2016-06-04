@@ -8,7 +8,13 @@
 (defparameter *human-player* black)
 (let ((p black))
   (defun current-player () p)
-  (defun switch-player () (setq p (next-to-play *board* p nil))))
+  (defun switch-player () (setq p (next-to-play *board* p nil)))
+  (defun set-player (p2) (setq p p2)))
+(defparameter *cpu-strategy* (minimax-searcher 3 #'weighted-squares))
+
+(defun reset-game ()
+  (setf *board* (initial-board))
+  (set-player black))
 
 (defun draw-othello (pos)
   (with-output-to-string (*standard-output*)
@@ -22,7 +28,7 @@
           (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) (not pos)))
           (terpri))
         (progn
-          (othello-a-step *board* (current-player) (maximizer #'weighted-squares))
+          (othello-a-step *board* (current-player) *cpu-strategy*)
           (switch-player)
           (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) t))
           (terpri)))
