@@ -101,7 +101,6 @@
 
 (defun othello (bl-strategy wh-strategy &optional (print t))
   "Play a game of othello. Return the score, where a positive difference means black, the first player, wins."
-  (setq *random-state* (make-random-state))
   (let ((board (initial-board)))
     (loop for player = black
             then (next-to-play board player print)
@@ -154,6 +153,7 @@
   (format t "~&~c to move: " (char-of player))
   (read))
 
+(setq *random-state* (make-random-state))
 (defun random-strategy (player board)
   "Make any legal move."
   (random-elt (legal-moves player board)))

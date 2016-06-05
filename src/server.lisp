@@ -20,6 +20,7 @@
   (with-output-to-string (*standard-output*)
     ;; It's dirty code!
     (if (eq (current-player) *human-player*)
+        ;; カレントPLが人間
         (progn
           (when pos
             (othello-a-step *board* (current-player) (lambda (player board) pos))
@@ -27,6 +28,7 @@
 
           (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) (not pos)))
           (terpri))
+        ;; カレントPLがコンピュータ
         (progn
           (othello-a-step *board* (current-player) *cpu-strategy*)
           (switch-player)
@@ -50,7 +52,6 @@
 
 (defun othello-handler (env)
   (let ((pos (parse (cdr (assoc :query-string (pairs env))))))
-    
     `(200 (:content-type "text/html")
           (,(draw-othello pos)))))
 

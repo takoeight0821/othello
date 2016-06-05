@@ -76,10 +76,12 @@
   (brightness (cdr (assoc name *rgb*)) amt))
 
 (defun draw-piece-svg (pos size type &optional (highlight nil))
-  (cond ((= type 0) (if highlight
-                        (tag a ("xlink:href" (make-game-link (car highlight))) ;highlight = (member pos (legal-moves player board))の戻り値
-                             (rect pos size (get-color 'green 80)))
-                        (rect pos size (get-color 'green 50))))
+  (cond ((= type 0)
+         (if highlight
+             ;; highlight = (member pos (legal-moves player board))の戻り値
+             (tag a ("xlink:href" (make-game-link (car highlight)))
+               (rect pos size (get-color 'green 80)))
+             (rect pos size (get-color 'green 50))))
         ((= type 1)
          (rect pos size (get-color 'green 50))
          (circle (cons (+ (car pos) (ash (car size) -1))
@@ -101,8 +103,7 @@
                 (draw-piece-svg (cons x y) '(50 . 50)
                                 (bref board pos)
                                 (if humanp
-                                    (member pos (legal-moves cur-pl board)))
-                                )))
+                                    (member pos (legal-moves cur-pl board))))))
   (if (not humanp)
       (tag script ()
         (princ "window.setTimeout('window.location=\"/\"', 1000)"))))
