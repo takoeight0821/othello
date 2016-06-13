@@ -80,7 +80,7 @@
          (if highlight
              ;; highlight = (member pos (legal-moves player board))の戻り値
              (tag a ("xlink:href" (make-game-link (car highlight)))
-               (rect pos size (get-color 'green 80)))
+                  (rect pos size (get-color 'green 80)))
              (rect pos size (get-color 'green 50))))
         ((= type 1)
          (rect pos size (get-color 'green 50))
@@ -95,12 +95,12 @@
                  (- (ash (car size) -1) 2)
                  (get-color 'white)))))
 
-(defun draw-board-svg (board cur-pl &optional (humanp nil))
+(defun draw-board-svg (board cur-pl &optional (size 50) (humanp nil))
   (loop for pos in *all-squares*
-        for x = (* 50 (mod pos 10))
-        for y = (* 50 (truncate pos 10))
+        for x = (* size (mod pos 10))
+        for y = (* size (truncate pos 10))
         do (tag g ()
-                (draw-piece-svg (cons x y) '(50 . 50)
+                (draw-piece-svg (cons x y) (cons size size) 
                                 (bref board pos)
                                 (if humanp
                                     (member pos (legal-moves cur-pl board))))))

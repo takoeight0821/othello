@@ -16,7 +16,7 @@
   (setf *board* (initial-board))
   (set-player black))
 
-(defun draw-othello (pos)
+(defun draw-othello (pos &optional (size 50))
   (with-output-to-string (*standard-output*)
     ;; It's dirty code!
     (if (eq (current-player) *human-player*)
@@ -26,13 +26,13 @@
             (othello-a-step *board* (current-player) (lambda (player board) pos))
             (switch-player))
 
-          (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) (not pos)))
+          (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size (not pos)))
           (terpri))
         ;; カレントPLがコンピュータ
         (progn
           (othello-a-step *board* (current-player) *cpu-strategy*)
           (switch-player)
-          (svg (* 50 10) (* 50 10) (draw-board-svg *board* (current-player) t))
+          (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size t))
           (terpri)))
 
     (princ (if (equal 1 (current-player)) "Black" "White"))
@@ -53,5 +53,5 @@
 (defun othello-handler (env)
   (let ((pos (parse (cdr (assoc :query-string (pairs env))))))
     `(200 (:content-type "text/html")
-          (,(draw-othello pos)))))
+          (,(draw-othello pos 80)))))
 
