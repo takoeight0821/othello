@@ -10,9 +10,11 @@
   (defun current-player () p)
   (defun switch-player () (setq p (next-to-play *board* p nil)))
   (defun set-player (p2) (setq p p2)))
-(defparameter *cpu-strategy* (minimax-searcher 3 #'weighted-squares))
+(defparameter *cpu-strategy* (alpha-beta-searcher 6 #'weighted-squares))
 
+(defparameter *game-log* '())
 (defun reset-game ()
+  (setf *game-log* '())
   (setf *board* (initial-board))
   (set-player black))
 
@@ -26,15 +28,28 @@
             (othello-a-step *board* (current-player) (lambda (player board) pos))
             (switch-player))
 
-          (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size (not pos)))
+          (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size
+                                                       (if (or (null (current-player))
+                                                               (eq (current-player) *human-player*))
+                                                           t
+                                                           nil)))
           (terpri))
         ;; カレントPLがコンピュータ
         (progn
           (othello-a-step *board* (current-player) *cpu-strategy*)
           (switch-player)
-          (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size t))
+          (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size
+                                                       (if (or (null (current-player))
+                                                               (eq (current-player) *human-player*))
+                                                           t
+                                                           nil)))
           (terpri)))
 
+    (setf *game-log* (cons (list *board*
+                                 (with-output-to-string (*standard-output*)
+                                   (print-board *board*))
+                                 (current-player))
+                           *game-log*))
     (princ (if (equal 1 (current-player)) "Black" "White"))
 
     (when (null (current-player))
@@ -45,6 +60,7 @@
                     (if (= (count 1 *board*) (count 2 *board*))
                         "Draw..."
                         "White win!"))))))
+
 (defun parse (param)
   (if param
       (read-from-string (subseq param 7))
@@ -54,4 +70,3 @@
   (let ((pos (parse (cdr (assoc :query-string (pairs env))))))
     `(200 (:content-type "text/html")
           (,(draw-othello pos 80)))))
-
