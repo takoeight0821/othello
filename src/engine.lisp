@@ -69,7 +69,6 @@
 
 (defun make-move (move player board)
   "Update board to reflect move by player."
-  ;; 最初に手を作成して次に反転を行う
   (setf (bref board move) player)
   (dolist (dir *all-directions*)
     (make-flips move player board dir))
@@ -246,27 +245,38 @@
       (declare (ignore value))
       move)))
 
-(defun modified-weight-squares (player board)
-  "Like WEIGHTED-SQUARES, but don't take off for moving
-   near an occupied corner."
-  (let ((w (weighted-squares player board)))
-    (dolist (corner '(11 18 81 88))
-      (when (not (eql (bref board corner) empty))
-        (dolist (c (neighbors corner))
-          (when (not (eql (bref board c) empty))
-            (incf w (* (- 5 (aref *weights* c))
-                       (if (eql (bref board c) player)
-                           +1 -1)))))))
-    w))
+(defun alpha-beta (player board achievable cutoff ply eval-fn)
+  "Find the best move, for PLAYER, according to EVAL-FN.
+   searching PLY levels deep and backing up values,
+   using cutoffs whenever possible."
+  (if (= ply 0)
+      (funcall eval-fn player board)
+      (let ((moves (legal-moves player board)))
+        (if (null moves)
+            (if (any-legal-move? (opponent player) board)
+                (- (alpha-beta (opponent player) board
+                               (- cutoff) (- achievable)
+                               (- ply 1) eval-fn))
+                (final-value player board))
+            (let ((best-move (first moves)))
+              (loop for move in moves do
+                (let* ((board2 (make-move move player (copy-board board)))
+                       (val (- (alpha-beta
+                                (opponent player) board2
+                                (- cutoff) (- achievable)
+                                (- ply 1) eval-fn))))
+                  (when (> val achievable)
+                    (setf achievable val)
+                    (setf best-move move)))
+                    until (>= achievable cutoff))
+              (values achievable best-move))))))
 
-(let ((neighbor-table (make-array 100 :initial-element nil)))
-  ;; neighbor tableの初期化
-  (dolist (square *all-squares*)
-    (dolist (dir *all-directions*)
-      (if (valid-p (+ square dir))
-          (push (+ square dir)
-                (aref neighbor-table square)))))
-  (defun neighbors (square)
-    "Return a list of all squares adjacent to a square."
-    (aref neighbor-table square)))
+(defun alpha-beta-searcher (depth eval-fn)
+  "A strategy that searches to DEPTH and then uses EVAL-FN."
+  (lambda (player board)
+    (multiple-value-bind (value move)
+        (alpha-beta player board losing-value winning-value
+                    depth eval-fn)
+      (declare (ignore value))
+      move)))
 
