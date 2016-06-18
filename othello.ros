@@ -1,0 +1,23 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ql:quickload :othello)
+  )
+
+(defpackage :ros.script.othello.3675229392
+  (:use :cl))
+(in-package :ros.script.othello.3675229392)
+
+(defun main (pl-color &rest argv)
+  (declare (ignorable argv))
+  (if (equal "black" pl-color)
+      (setf othello::*human-player* othello::black)
+      (setf othello::*human-player* othello::white))
+  (clack:clackup #'othello::othello-handler)
+  (loop
+    (if (equal (read) 'quit)
+        (return))))
+;;; vim: set ft=lisp lisp:
