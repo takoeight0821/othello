@@ -25,8 +25,7 @@
                          (:file "util")
                          (:file "engine")
                          (:file "svg")
-                         #-clisp (:file "server")
-                         #+clisp (:file "server-clisp")
+                         (:file "server")
                          (:file "othello")
                          )))
   :description ""

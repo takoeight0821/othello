@@ -16,8 +16,10 @@ exec ros -Q -- $0 "$@"
   (if (equal "black" pl-color)
       (setf othello::*human-player* othello::black)
       (setf othello::*human-player* othello::white))
-  (clack:clackup #'othello::othello-handler)
+  (othello:start-server)
   (loop
     (if (equal (read) 'quit)
-        (return))))
+        (progn
+          (othello:stop-server)
+          (return)))))
 ;;; vim: set ft=lisp lisp:

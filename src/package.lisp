@@ -2,5 +2,9 @@
 (defpackage othello
   (:use :cl
    #+clisp :socket
-   #-clisp :clack))
+        #-clisp :clack)
+  (:export
+   :start-server
+   :stop-server
+   :reset-game))
 

@@ -137,7 +137,8 @@
   "Call the player's strategy function to get a move.
   Keep calling until a legal move is made."
   (when print (print-board board))
-  (let ((move (funcall strategy player (copy-board board))))
+  (let ((move (funcall strategy player ;(copy-board)
+                       board)))
     (cond
       ((and (valid-p move) (legal-p move player board))
        (when print
