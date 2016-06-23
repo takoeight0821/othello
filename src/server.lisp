@@ -29,20 +29,16 @@
             (switch-player))
 
           (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size
-                                                       (if (or (null (current-player))
-                                                               (eq (current-player) *human-player*))
-                                                           t
-                                                           nil)))
+                                                       (or (null (current-player))
+                                                           (eq (current-player) *human-player*))))
           (terpri))
         ;; カレントPLがコンピュータ
         (progn
           (othello-a-step *board* (current-player) *cpu-strategy*)
           (switch-player)
           (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size
-                                                       (if (or (null (current-player))
-                                                               (eq (current-player) *human-player*))
-                                                           t
-                                                           nil)))
+                                                       (or (null (current-player))
+                                                           (eq (current-player) *human-player*))))
           (terpri)))
 
     (setf *game-log* (cons (list *board*
