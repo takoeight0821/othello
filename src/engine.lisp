@@ -187,16 +187,23 @@
       (elt moves (position best scores)))))
 
 (defparameter *weights*
-  '#(0   0   0  0  0  0  0   0   0 0
-     0 120 -20 20  5  5 20 -20 120 0
-     0 -20 -40 -5 -5 -5 -5 -40 -20 0
-     0  20  -5 15  3  3 15  -5  20 0
-     0   5  -5  3  3  3  3  -5   5 0
-     0   5  -5  3  3  3  3  -5   5 0
-     0  20  -5 15  3  3 15  -5  20 0
-     0 -20 -40 -5 -5 -5 -5 -40 -20 0
-     0 120 -20 20  5  5 20 -20 120 0
-     0   0   0  0  0  0  0   0   0 0))
+  #(0   0   0  0  0  0  0   0   0 0
+    0 120 -20 20  5  5 20 -20 120 0
+    0 -20 -40 -5 -5 -5 -5 -40 -20 0
+    0  20  -5 15  3  3 15  -5  20 0
+    0   5  -5  3  3  3  3  -5   5 0
+    0   5  -5  3  3  3  3  -5   5 0
+    0  20  -5 15  3  3 15  -5  20 0
+    0 -20 -40 -5 -5 -5 -5 -40 -20 0
+    0 120 -20 20  5  5 20 -20 120 0
+    0   0   0  0  0  0  0   0   0 0))
+
+(defparameter *anti-weights*
+  (map (type-of *weights*)
+       (lambda (x) (if (> 0 x)
+                       (* 8 (abs x))
+                       (- x)))
+       *weights*))
 
 (defun weighted-squares (player board)
   "Sum of the weights of player's squares minus opponent's."
@@ -206,6 +213,14 @@
             sum (aref *weights* i)
           when (eql (bref board i) opp)
             sum (- (aref *weights* i)))))
+
+(defun anti-weighted-squares (player board)
+  (let ((opp (opponent player)))
+    (loop for i in *all-squares*
+          when (eql (bref board i) player)
+            sum (aref *anti-weights* i)
+          when (eql (bref board i) opp)
+            sum (- (aref *anti-weights* i)))))
 
 (defconstant winning-value most-positive-fixnum)
 (defconstant losing-value most-negative-fixnum)
