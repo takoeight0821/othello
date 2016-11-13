@@ -25,7 +25,10 @@
         ;; カレントPLが人間
         (progn
           (when pos
-            (othello-a-step *board* (current-player) (lambda (player board) pos))
+            (othello-a-step *board* (current-player)
+                            (lambda (player board)
+                              (declare (ignore player board))
+                              pos))
             (switch-player))
 
           (svg (* size 10) (* size 10) (draw-board-svg *board* (current-player) size

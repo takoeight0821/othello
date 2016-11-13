@@ -1,6 +1,6 @@
 #!/bin/sh
 #|-*- mode:lisp -*-|#
-#| <Put a one-line description here>
+#| Othello
 exec ros -Q -- $0 "$@"
 |#
 (progn ;;init forms
@@ -11,7 +11,7 @@ exec ros -Q -- $0 "$@"
   (:use :cl))
 (in-package :ros.script.othello.3675229392)
 
-(defun main (pl-color &rest argv)
+(defun main (&optional (pl-color "black") &rest argv)
   (declare (ignorable argv))
   (if (equal "black" pl-color)
       (setf othello::*human-player* othello::black)
