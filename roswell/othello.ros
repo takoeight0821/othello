@@ -17,6 +17,7 @@ exec ros -Q -- $0 "$@"
       (setf othello::*human-player* othello::black)
       (setf othello::*human-player* othello::white))
   (othello:start-server)
+  (format t "enter 'quit' to quit.")
   (loop
     (if (equal (read) 'quit)
         (progn
