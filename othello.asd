@@ -17,8 +17,9 @@
   :author "Kono Yuya"
   :license "MIT license"
   :depends-on (:assoc-utils
-               #-clisp :hunchentoot
-               #-clisp :clack)
+               :hunchentoot
+               :clack
+               )
   :components ((:module "src"
                 :components
                         (
