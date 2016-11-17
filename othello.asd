@@ -16,13 +16,13 @@
   :version "0.1"
   :author "Kono Yuya"
   :license "MIT license"
-  :depends-on (#-clisp :hunchentoot
+  :depends-on (:assoc-utils
+               #-clisp :hunchentoot
                #-clisp :clack)
   :components ((:module "src"
                 :components
                         (
                          (:file "package")
-                         (:file "util")
                          (:file "engine")
                          (:file "svg")
                          (:file "server")

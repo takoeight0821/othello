@@ -10,11 +10,6 @@
         alist)
   (princ #\>))
 
-;; from https://github.com/fukamachi/assoc-utils
-(defun plist-alist (plist)
-  (loop for (k v) on plist by #'cddr
-                collect (cons (string-downcase k) v)))
-
 (defmacro tag (name atts &body body)
   `(progn (print-tag ',name
                      (list ,@(mapcar (lambda (x)

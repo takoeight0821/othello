@@ -1,8 +1,8 @@
-(in-package :cl-user)
+(in-package #:cl-user)
 (defpackage othello
-  (:use :cl #+clisp :socket #-clisp :clack)
+  (:use :cl #+clisp :socket #-clisp :clack :assoc-utils)
   (:export
-   :start-server
-   :stop-server
-   :reset-game))
+   #:start-server
+   #:stop-server
+   #:reset-game))
 

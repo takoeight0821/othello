@@ -156,7 +156,8 @@
 (setq *random-state* (make-random-state))
 (defun random-strategy (player board)
   "Make any legal move."
-  (random-elt (legal-moves player board)))
+  (let ((legal-moves (legal-moves player board)))
+    (elt legal-moves (random (length legal-moves)))))
 
 (defun legal-moves (player board)
   "Returns a list of legal moves for player"

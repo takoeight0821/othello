@@ -66,6 +66,6 @@
       nil))
 
 (defun othello-handler (env)
-  (let ((pos (parse (cdr (assoc :query-string (pairs env))))))
+  (let ((pos (parse (assoc-utils:aget (assoc-utils:plist-alist env) "query-string"))))
     `(200 (:content-type "text/html")
           (,(draw-othello pos 80)))))
