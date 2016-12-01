@@ -19,6 +19,8 @@
   :depends-on (:assoc-utils
                :hunchentoot
                :clack
+               :caveman
+               :ceramic
                )
   :components ((:module "src"
                 :components
@@ -28,6 +30,7 @@
                          (:file "svg")
                          (:file "server")
                          (:file "othello")
+                         (:file "app")
                          )))
   :description ""
   :long-description

@@ -7,6 +7,8 @@
 (defconstant white 2 "A white piece")
 (defconstant outer 3 "Marks squares outside the 8x8 board")
 
+(deftype maybe (type) `(or null ,type))
+
 (deftype piece () `(integer ,empty ,outer))
 
 (defun char-of (piece) (char ".@0?" piece))
@@ -15,7 +17,8 @@
 
 (deftype board () '(simple-array piece (100)))
 
-(defun bref (board square) (aref board square))
+(defun bref (board square)
+  (aref board square))
 (defsetf bref (board square) (val)
   `(setf (aref ,board ,square) ,val))
 
