@@ -1,4 +1,17 @@
-(in-package :othello)
+(in-package #:cl-user)
+(defpackage #:othello/server
+  (:use #:cl #:othello/svg)
+  (:import-from #:othello/engine
+                #:initial-board
+                #:black
+                #:white
+                #:next-to-play
+                #:alpha-beta-searcher
+                #:weighted-squares
+                #:othello-a-step
+                #:print-board))
+(in-package #:othello/server)
+(cl-annot:enable-annot-syntax)
 
 ;; The othello game server
 
@@ -65,6 +78,7 @@
       (read-from-string (subseq param 7))
       nil))
 
+@export
 (defun othello-handler (env)
   (let ((pos (parse (assoc-utils:aget (assoc-utils:plist-alist env) "query-string"))))
     `(200 (:content-type "text/html")

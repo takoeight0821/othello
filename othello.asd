@@ -7,42 +7,57 @@
   Author: Kono Yuya (takohati0821@gmail.com)
 |#
 
-(in-package :cl-user)
-(defpackage othello-asd
-  (:use :cl :asdf))
-(in-package :othello-asd)
+(in-package #:cl-user)
 
-(defsystem othello
-  :version "0.1"
-  :author "Kono Yuya"
-  :license "MIT license"
-  :depends-on (:assoc-utils
-               :hunchentoot
+#-asdf3.1 (error "othello requires ASDF 3.1")
+(asdf:defsystem #:othello
+  :class :package-inferred-system
+  :version "0.2"
+  :author "Yuya Kono"
+  :license "MIT"
+  :depends-on (:uiop
+               :cl-annot
+               :assoc-utils
                :clack
-               :ceramic
-               :lucerne
-               )
-  :components ((:module "src"
-                :components
-                        (
-                         (:file "package")
-                         (:file "engine")
-                         (:file "svg")
-                         (:file "server")
-                         (:file "othello")
-                         (:file "app")
-                         )))
-  :description ""
-  :long-description
-  #.(with-open-file (stream (merge-pathnames
-                             #p"README.markdown"
-                             (or *load-pathname* *compile-file-pathname*))
-                            :if-does-not-exist nil
-                            :direction :input)
-      (when stream
-        (let ((seq (make-array (file-length stream)
-                               :element-type 'character
-                               :fill-pointer t)))
-          (setf (fill-pointer seq) (read-sequence seq stream))
-          seq)))
-  :in-order-to ((test-op (test-op othello-test))))
+
+               "othello/package"
+               ))
+
+;; (defpackage othello-asd
+;;   (:use :cl :asdf))
+;; (in-package :othello-asd)
+
+;; (defsystem othello
+;;   :version "0.1"
+;;   :author "Kono Yuya"
+;;   :license "MIT license"
+;;   :depends-on (:assoc-utils
+;;                :hunchentoot
+;;                :clack
+;;                :ceramic
+;;                :lucerne
+;;                )
+;;   :components ((:module "src"
+;;                 :components
+;;                         (
+;;                          (:file "package")
+;;                          (:file "engine")
+;;                          (:file "svg")
+;;                          (:file "server")
+;;                          (:file "othello")
+;;                          (:file "app")
+;;                          )))
+;;   :description ""
+;;   :long-description
+;;   #.(with-open-file (stream (merge-pathnames
+;;                              #p"README.markdown"
+;;                              (or *load-pathname* *compile-file-pathname*))
+;;                             :if-does-not-exist nil
+;;                             :direction :input)
+;;       (when stream
+;;         (let ((seq (make-array (file-length stream)
+;;                                :element-type 'character
+;;                                :fill-pointer t)))
+;;           (setf (fill-pointer seq) (read-sequence seq stream))
+;;           seq)))
+;;   :in-order-to ((test-op (test-op othello-test))))

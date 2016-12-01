@@ -1,4 +1,12 @@
-(in-package :othello)
+(in-package #:cl-user)
+(defpackage #:othello/svg
+  (:use #:cl)
+  (:import-from #:othello/engine
+                #:bref
+                #:*all-squares*
+                #:legal-moves))
+(in-package #:othello/svg)
+(cl-annot:enable-annot-syntax)
 
 (defun print-tag (name alist closingp)
   (princ #\<)
@@ -28,6 +36,7 @@
   `(tag body ()
         ,@body))
 
+@export
 (defmacro svg (width height &body body)
   `(tag svg (xmlns "http://www.w3.org/2000/svg"
                    "xmlns:xlink" "http://www.w3.org/1999/xlink" height ,height width ,width)
@@ -90,6 +99,7 @@
                  (- (ash (car size) -1) 2)
                  (get-color 'white)))))
 
+@export
 (defun draw-board-svg (board cur-pl &optional (size 50) (humanp nil))
   (loop for pos in *all-squares*
         for x = (* size (mod pos 10))

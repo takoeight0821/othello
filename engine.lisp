@@ -1,10 +1,18 @@
-(in-package :othello)
+(in-package #:cl-user)
+(defpackage #:othello/engine
+  (:use #:cl))
+(in-package #:othello/engine)
+(cl-annot:enable-annot-syntax)
 
 (defparameter *all-directions* '(-11 -10 -9 -1 1 9 10 11))
 
+@export
 (defconstant empty 0 "An empty square")
+@export
 (defconstant black 1 "A black piece")
+@export
 (defconstant white 2 "A white piece")
+@export
 (defconstant outer 3 "Marks squares outside the 8x8 board")
 
 (deftype maybe (type) `(or null ,type))
@@ -13,21 +21,26 @@
 
 (defun char-of (piece) (char ".@0?" piece))
 
+@export
 (defun opponent (player) (if (eql player black) white black))
 
 (deftype board () '(simple-array piece (100)))
 
+@export
 (defun bref (board square)
   (aref board square))
+@export
 (defsetf bref (board square) (val)
   `(setf (aref ,board ,square) ,val))
 
 (defun copy-board (board)
   (copy-seq board))
 
+@export
 (defparameter *all-squares*
   (loop for i from 11 to 88 when (<= 1 (mod i 10) 8) collect i))
 
+@export
 (defun initial-board ()
   "Return a board, empty except for four pieces in the middle."
   ;; ボードは100要素のベクターから、要素11-88が使用される
@@ -46,6 +59,7 @@
   (- (count player board)
      (count (opponent player) board)))
 
+@export
 (defun print-board (board)
   "Print a board, along with some statistics."
   (format t "~2&     1 2 3 4 5 6 7 8  [~c=~2a ~c=~2a (~@d)]"
@@ -63,6 +77,7 @@
   "Valid moves are numbers in the range 11-88 that end in 1-8."
   (and (integerp move) (<= 11 move 88) (<= 1 (mod move 10) 8)))
 
+@export
 (defun legal-p (move player board)
   "A Legal move must be into an empty square, and it must flip at least one opponent piece."
   (and (eql (bref board move) empty)
@@ -101,6 +116,7 @@
          (find-bracketing-piece (+ square dir) player board dir))
         (t nil)))
 
+@export
 (defun othello (bl-strategy wh-strategy &optional (print t))
   "Play a game of othello. Return the score, where a positive difference means black, the first player, wins."
   (let ((board (initial-board)))
@@ -116,10 +132,12 @@
       (print-board board))
     (count-difference black board)))
 
+@export
 (defun othello-a-step (board cur-pl strategy &optional (print nil))
   (if (next-to-play board (opponent cur-pl) print)
       (get-move strategy cur-pl board print)))
 
+@export
 (defun next-to-play (board previous-player print)
   "Compute the player to move next, or NIL if nobody can move."
   (let ((opp (opponent previous-player)))
@@ -150,6 +168,7 @@
       (t (warn "Illegal move: ~d" move)
          (get-move strategy player board print)))))
 
+@export
 (defun human (player board)
   "A human player for the game of Othello"
   (declare (ignore board))
@@ -157,6 +176,7 @@
   (read))
 
 (setq *random-state* (make-random-state))
+@export
 (defun random-strategy (player board)
   "Make any legal move."
   (let ((legal-moves (legal-moves player board)))
@@ -169,6 +189,7 @@
             when (legal-p move player board) collect move)
       nil))
 
+@export
 (defun maximize-difference (player board)
   "A strategy that maximizes the difference in pieses."
   (funcall (maximizer #'count-difference) player board))
@@ -209,6 +230,7 @@
                        (- x)))
        *weights*))
 
+@export
 (defun weighted-squares (player board)
   "Sum of the weights of player's squares minus opponent's."
   (let ((opp (opponent player)))
@@ -290,7 +312,7 @@
                     (setf best-move move)))
                     until (>= achievable cutoff))
               (values achievable best-move))))))
-
+@export
 (defun alpha-beta-searcher (depth eval-fn)
   "A strategy that searches to DEPTH and then uses EVAL-FN."
   (lambda (player board)
