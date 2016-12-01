@@ -19,8 +19,8 @@
   :depends-on (:assoc-utils
                :hunchentoot
                :clack
-               :caveman
                :ceramic
+               :lucerne
                )
   :components ((:module "src"
                 :components
