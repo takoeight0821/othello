@@ -18,6 +18,7 @@
         alist)
   (princ #\>))
 
+@export
 (defmacro tag (name atts &body body)
   `(progn (print-tag ',name
                      (list ,@(mapcar (lambda (x)
@@ -42,20 +43,24 @@
                    "xmlns:xlink" "http://www.w3.org/1999/xlink" height ,height width ,width)
         ,@body))
 
+@export
 (defun brightness (col amt)
   (mapcar (lambda (x)
             (min 255 (max 0 (+ x amt))))
           col))
 
+@export
 (defun svg-style (color)
   (format nil
           "~{fill:rgb(~a,~a,~a);stroke:rgb(~a,~a,~a)~}"
           (append color
                   (brightness color -100))))
 
+@export
 (defun circle (center radius color)
   (tag circle (cx (car center) cy (cdr center) r radius style (svg-style color))))
 
+@export
 (defun polygon (points color)
   (tag polygon (points (format nil
                                "~{~a,~a ~}"
@@ -64,6 +69,7 @@
                                        points))
                 style (svg-style color))))
 
+@export
 (defun rect (pos size color)
   (tag rect (x (car pos) y (cdr pos)
                width (car size) height (cdr size)
@@ -76,9 +82,11 @@
     (lime 0 255 0) (green 0 50 0) (aqua 0 255 255) (teal 0 128 128)
     (blue 0 0 255) (navy 0 0 128) (fuchsia 255 0 255) (purple 128 0 128)))
 
+@export
 (defun get-color (name &optional (amt 0))
   (brightness (cdr (assoc name *rgb*)) amt))
 
+@export
 (defun draw-piece-svg (pos size type &optional (highlight nil))
   (cond ((= type 0)
          (if highlight
@@ -101,7 +109,7 @@
 
 @export
 (defun draw-board-svg (board cur-pl &optional (size 50) (humanp nil))
-  (loop for pos in *all-squares*
+  (loop for pos in othello/engine:*all-squares*
         for x = (* size (mod pos 10))
         for y = (* size (truncate pos 10))
         do (tag g ()

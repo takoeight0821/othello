@@ -182,6 +182,7 @@
   (let ((legal-moves (legal-moves player board)))
     (elt legal-moves (random (length legal-moves)))))
 
+@export
 (defun legal-moves (player board)
   "Returns a list of legal moves for player"
   (if player
