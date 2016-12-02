@@ -18,10 +18,10 @@ exec ros -Q -- $0 "$@"
       (setf othello::*human-player* othello::white))
   (setf othello::*cpu-strategy* (othello::alpha-beta-searcher (parse-integer depth) #'othello::weighted-squares))
   (format t "enter 'quit' to quit.")
-  (othello:start-server)
+  (othello:run-app)
   (loop
     (if (equal (read) 'quit)
         (progn
-          (othello:stop-server)
+          (othello:stop-app)
           (return)))))
 ;;; vim: set ft=lisp lisp:
