@@ -20,7 +20,8 @@
 (defun run-app ()
   (start-server)
   (let ((window (ceramic:make-window :url "http://localhost:5000/")))
-    (ceramic:show window)))
+    (ceramic:show window)
+    window))
 
 @export
 (defun stop-app ()
