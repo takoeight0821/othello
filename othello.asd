@@ -19,7 +19,6 @@
                :cl-annot
                :assoc-utils
                :clack
-               :ceramic
                "othello/package"
                ))
 

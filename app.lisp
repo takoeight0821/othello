@@ -16,17 +16,3 @@
 (defun stop-server ()
   (clack:stop *server*))
 
-@export
-(defun run-app ()
-  (start-server)
-  (let ((window (ceramic:make-window :url "http://localhost:5000/")))
-    (ceramic:show window)
-    window))
-
-@export
-(defun stop-app ()
-  (ceramic:stop)
-  (stop-server))
-
-(ceramic:define-entry-point :othello ()
-  (run-app))

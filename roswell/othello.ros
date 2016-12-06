@@ -6,17 +6,11 @@ exec ros -Q -- $0 "$@"
 
 (progn ;;init forms
   (ql:quickload :othello)
-  (ql:quickload :ceramic)
   )
 
 (defpackage :ros.script.othello.3675229392
   (:use :cl))
 (in-package :ros.script.othello.3675229392)
-
-(defmethod closedp ((window ceramic:window))
-  (with-slots (%id) window
-    (ceramic.window::sync-js "return Ceramic.windows[~S].closed;" %id))
-  )
 
 (defun main (&optional (pl-color "black") (depth "6") &rest argv)
   (declare (ignorable pl-color depth argv))
@@ -24,19 +18,12 @@ exec ros -Q -- $0 "$@"
   ;;     (setf othello::*human-player* othello::black)
   ;;     (setf othello::*human-player* othello::white))
   ;; (setf othello::*cpu-strategy* (othello::alpha-beta-searcher (parse-integer depth) #'othello::weighted-squares))
-  (let ((window nil))
-    (ceramic:setup)
-    (ceramic:start)
-    (unwind-protect
-         (setf window (othello:run-app))
-      (progn
-        (format t "=====================~%")
-        (format t "Enter 'quit' to quit.")
-        (finish-output)
-        (loop
-          (if (or (equal (read) 'quit)
-                  (closedp window))
-              (progn
-                (othello:stop-app)
-                (return))))))))
+  (othello:start-server)
+  (format t "=====================~%")
+  (format t "Enter 'quit' to quit.")
+  (finish-output)
+  (loop
+    (when (equal (read) 'quit)
+      (othello:stop-server)
+      (return))))
 ;;; vim: set ft=lisp lisp:
