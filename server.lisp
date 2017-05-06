@@ -9,7 +9,9 @@
                 #:alpha-beta-searcher
                 #:weighted-squares
                 #:othello-a-step
-                #:print-board))
+                #:print-board)
+  (:export #:*human-player*
+           #:*cpu-strategy*))
 (in-package #:othello/server)
 (cl-annot:enable-annot-syntax)
 

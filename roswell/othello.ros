@@ -13,11 +13,12 @@ exec ros -Q -- $0 "$@"
 (in-package :ros.script.othello.3675229392)
 
 (defun main (&optional (pl-color "black") (depth "6") &rest argv)
-  (declare (ignorable pl-color depth argv))
-  ;; (if (equal "black" pl-color)
-  ;;     (setf othello::*human-player* othello::black)
-  ;;     (setf othello::*human-player* othello::white))
-  ;; (setf othello::*cpu-strategy* (othello::alpha-beta-searcher (parse-integer depth) #'othello::weighted-squares))
+
+  (if (equal "black" pl-color)
+      (setf othello:*human-player* othello:black)
+      (setf othello:*human-player* othello:white))
+  (setf othello:*cpu-strategy* (othello:alpha-beta-searcher (parse-integer depth) #'othello:weighted-squares))
+
   (othello:start-server)
   (format t "=====================~%")
   (format t "Enter 'quit' to quit.")
