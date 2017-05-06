@@ -5,7 +5,7 @@ exec ros -Q -- $0 "$@"
 |#
 
 (progn ;;init forms
-  (ql:quickload :othello)
+  (ql:quickload :othello :silent t)
   )
 
 (defpackage :ros.script.othello.3675229392
@@ -13,18 +13,22 @@ exec ros -Q -- $0 "$@"
 (in-package :ros.script.othello.3675229392)
 
 (defun main (&optional (pl-color "black") (depth "6") &rest argv)
+  (declare (ignore argv))
 
-  (if (equal "black" pl-color)
-      (setf othello:*human-player* othello:black)
-      (setf othello:*human-player* othello:white))
-  (setf othello:*cpu-strategy* (othello:alpha-beta-searcher (parse-integer depth) #'othello:weighted-squares))
+  (if (or (equal "--help" pl-color) (equal "-h" pl-color))
+      (format t "Usage: othello [player color] [cpu strategy (1-7)]")
+      (progn
+        (if (equal "black" pl-color)
+            (setf othello:*human-player* othello:black)
+            (setf othello:*human-player* othello:white))
+        (setf othello:*cpu-strategy* (othello:alpha-beta-searcher (parse-integer depth) #'othello:weighted-squares))
 
-  (othello:start-server)
-  (format t "=====================~%")
-  (format t "Enter 'quit' to quit.")
-  (finish-output)
-  (loop
-    (when (equal (read) 'quit)
-      (othello:stop-server)
-      (return))))
+        (othello:start-server)
+        (format t "=====================~%")
+        (format t "Enter 'quit' to quit.")
+        (finish-output)
+        (loop
+           (when (equal (read) 'quit)
+             (othello:stop-server)
+             (return))))))
 ;;; vim: set ft=lisp lisp:
